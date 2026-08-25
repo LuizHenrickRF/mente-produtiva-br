@@ -1,7 +1,40 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Autorização TikTok — Mente produtiva Br</title><style>body{margin:0;background:#f7f9fc;color:#0b1220;font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;min-height:100vh}.card{width:min(680px,calc(100% - 40px));background:white;border:1px solid #dbe2ed;border-radius:24px;padding:40px;box-shadow:0 24px 70px #0b122020}code{display:block;overflow-wrap:anywhere;background:#eef2f7;padding:16px;border-radius:10px}button{background:#0b1220;color:white;border:0;border-radius:10px;padding:13px 18px;font-weight:700}p{color:#526078}</style></head><body><main class="card"><h1>Autorização do TikTok</h1><div id="content"></div></main><script>
-const p=new URLSearchParams(location.search);const error=p.get('error');const code=p.get('code');const state=p.get('state');const root=document.getElementById('content');
-if(error){root.innerHTML='<h2>Autorização não concluída</h2><p>'+String(p.get('error_description')||error).replace(/[<>&]/g,'')+'</p>'}
-else if(code&&state){root.innerHTML='<h2>Autorização recebida</h2><p>Volte ao terminal onde iniciou o fluxo OAuth e cole a URL completa desta página. O código não é enviado a terceiros por este site.</p><code id="url"></code><p><button id="copy">Copiar URL completa</button></p>';document.getElementById('url').textContent=location.href;document.getElementById('copy').onclick=()=>navigator.clipboard.writeText(location.href)}
-else{root.innerHTML='<h2>Callback aguardando autorização</h2><p>Inicie a conexão pelo assistente local da Mente produtiva Br.</p>'}
-</script></body></html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Autorização TikTok — Mente produtiva Br</title>
+  <style>body{margin:0;background:#f7f9fc;color:#0b1220;font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;min-height:100vh}.card{width:min(680px,calc(100% - 40px));background:white;border:1px solid #dbe2ed;border-radius:24px;padding:40px;box-shadow:0 24px 70px #0b122020}code{display:block;overflow-wrap:anywhere;background:#eef2f7;padding:16px;border-radius:10px}button{background:#0b1220;color:white;border:0;border-radius:10px;padding:13px 18px;font-weight:700}p{color:#526078}</style>
+</head>
+<body>
+<main class="card"><h1>Autorização do TikTok</h1><div id="content"></div></main>
+<script>
+const originalUrl=location.href;
+const params=new URLSearchParams(location.search);
+const error=params.get('error');
+const code=params.get('code');
+const state=params.get('state');
+history.replaceState(null,'',location.pathname);
+const root=document.getElementById('content');
+const heading=document.createElement('h2');
+const message=document.createElement('p');
+root.append(heading,message);
+if(error){
+  heading.textContent='Autorização não concluída';
+  message.textContent=params.get('error_description')||error;
+}else if(code&&state){
+  heading.textContent='Autorização recebida';
+  message.textContent='Volte ao terminal e cole a URL abaixo. Ela não é enviada a terceiros por esta página e já foi removida da barra do navegador.';
+  const value=document.createElement('code'); value.textContent=originalUrl; root.append(value);
+  const actions=document.createElement('p'); const copy=document.createElement('button'); copy.type='button'; copy.textContent='Copiar URL do callback';
+  copy.addEventListener('click',async()=>{await navigator.clipboard.writeText(originalUrl);copy.textContent='Copiada';});
+  actions.append(copy); root.append(actions);
+}else{
+  heading.textContent='Callback aguardando autorização';
+  message.textContent='Inicie a conexão pelo assistente local da Mente produtiva Br.';
+}
+</script>
+</body>
+</html>
