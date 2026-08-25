@@ -30,7 +30,7 @@ if(error){
   message.textContent='Volte ao terminal e cole a URL abaixo. Ela não é enviada a terceiros por esta página e já foi removida da barra do navegador.';
   const value=document.createElement('code'); value.textContent=originalUrl; root.append(value);
   const actions=document.createElement('p'); const copy=document.createElement('button'); copy.type='button'; copy.textContent='Copiar URL do callback';
-  copy.addEventListener('click',async()=>{await navigator.clipboard.writeText(originalUrl);copy.textContent='Copiada';});
+  copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(originalUrl);copy.textContent='Copiada';}catch{copy.textContent='Não foi possível copiar; selecione a URL acima.';}});
   actions.append(copy); root.append(actions);
 }else{
   heading.textContent='Callback aguardando autorização';
